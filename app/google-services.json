@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "421540665844",
+    "firebase_url": "https://appcasalemcasa.firebaseio.com",
+    "project_id": "appcasalemcasa",
+    "storage_bucket": "appcasalemcasa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:421540665844:android:554dc04949e3d74bdc41a1",
+        "android_client_info": {
+          "package_name": "br.com.envolvedesenvolve.casalemcasa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "421540665844-u8e03e7gl61o4ogsgfbr6pmpb4945qna.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.envolvedesenvolve.casalemcasa",
+            "certificate_hash": "0c1b5dcfa4999574e0187ffb6a5719b53ee178a5"
+          }
+        },
+        {
+          "client_id": "421540665844-jbe3vqgnvqmjpgg1el69p28cgplpku2f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtU41skAcLaYr3o7kKsys8DWZ8eitGokI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "421540665844-jbe3vqgnvqmjpgg1el69p28cgplpku2f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

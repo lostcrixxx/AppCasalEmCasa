@@ -39,6 +39,8 @@ import br.com.envolvedesenvolve.casalemcasa.Model.ToDo;
 
 public class MainActivity extends AppCompatActivity {
 
+    String firstUUID;
+
     List<ToDo> toDoList = new ArrayList<>();
     FirebaseFirestore db;
 
@@ -68,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!isUpdate){
+                if (!isUpdate) {
                     setData(title.getText().toString(), description.getText().toString());
                 } else {
                     updateData(title.getText().toString(), description.getText().toString());
@@ -84,10 +86,15 @@ public class MainActivity extends AppCompatActivity {
         listItem.setLayoutManager(layoutManager);
 
         loadData();
+
+        String id1 = UUID.randomUUID().toString();
+        firstUUID = id1.split("-")[0];
+        Log.e("UUI", "UUI " + id1);
+        Log.e("UUI", "UUI last " + firstUUID);
     }
 
     private void updateData(String title, String description) {
-        db.collection("ToDoList").document(idUpdate)
+        db.collection(firstUUID).document(idUpdate)
                 .update("title", title, "description", description)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -96,13 +103,13 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        db.collection("ToDoList").document(idUpdate)
-        .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                loadData();
-            }
-        });
+        db.collection(firstUUID).document(idUpdate)
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                        loadData();
+                    }
+                });
     }
 
     private void setData(String title, String description) {
@@ -112,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
         todo.put("title", title);
         todo.put("description", description);
 
-        db.collection("ToDoList").document(id)
+        db.collection(firstUUID).document(id)
                 .set(todo).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -127,44 +134,44 @@ public class MainActivity extends AppCompatActivity {
             if (toDoList.size() > 0) {
                 toDoList.clear();
             }
-                db.collection("ToDoList")
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        for (DocumentSnapshot doc : task.getResult()) {
-                            ToDo todo = new ToDo(doc.getString("id"),
-                                    doc.getString("title"),
-                                    doc.getString("description"));
+            db.collection(firstUUID)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            for (DocumentSnapshot doc : task.getResult()) {
+                                ToDo todo = new ToDo(doc.getString("id"),
+                                        doc.getString("title"),
+                                        doc.getString("description"));
 
-                            toDoList.add(todo);
-                        }
-                        adapter = new ListItemAdapter(MainActivity.this, toDoList);
-                        listItem.setAdapter(adapter);
+                                toDoList.add(todo);
+                            }
+                            adapter = new ListItemAdapter(MainActivity.this, toDoList);
+                            listItem.setAdapter(adapter);
 //                    dialog.dismiss();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(MainActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-        } catch (Exception e){
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(MainActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (Exception e) {
             Log.e("MainActivity", "teste " + e.toString());
             e.printStackTrace();
         }
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item){
-        if(item.getTitle().equals("APAGAR")){
+    public boolean onContextItemSelected(MenuItem item) {
+        if (item.getTitle().equals("APAGAR")) {
             deleteItem(item.getOrder());
         }
         return super.onContextItemSelected(item);
     }
 
     private void deleteItem(int index) {
-        db.collection("ToDoList")
+        db.collection(firstUUID)
                 .document(toDoList.get(index).getId())
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

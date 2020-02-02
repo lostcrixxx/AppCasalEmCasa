@@ -1,16 +1,16 @@
 package br.com.envolvedesenvolve.casalemcasa;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -32,7 +32,6 @@ import java.util.UUID;
 
 import br.com.envolvedesenvolve.casalemcasa.Adapter.ListItemAdapter;
 import br.com.envolvedesenvolve.casalemcasa.Model.ToDo;
-import dmax.dialog.SpotsDialog;
 
 /**
  * Created by Cristiano M. on 31/01/2020
@@ -78,9 +77,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        listItem = findViewById(R.id.listTodo);
+        listItem = (RecyclerView) this.findViewById(R.id.listTodo);
         listItem.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
+//        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         listItem.setLayoutManager(layoutManager);
 
         loadData();
@@ -122,30 +122,36 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadData() {
+        try {
 //        dialog.show();
-        if(toDoList.size() > 0) {
-            toDoList.clear();
-            db.collection("ToDoList").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    for (DocumentSnapshot doc : task.getResult()) {
-                        ToDo todo = new ToDo(doc.getString("id"),
-                                doc.getString("title"),
-                                doc.getString("descrition"));
+            if (toDoList.size() > 0) {
+                toDoList.clear();
+            }
+                db.collection("ToDoList")
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        for (DocumentSnapshot doc : task.getResult()) {
+                            ToDo todo = new ToDo(doc.getString("id"),
+                                    doc.getString("title"),
+                                    doc.getString("description"));
 
-                        toDoList.add(todo);
-                    }
-                    adapter = new ListItemAdapter(MainActivity.this, toDoList);
-                    listItem.setAdapter(adapter);
-//                    dialog.dismiss();
-                }
-            })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(MainActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            toDoList.add(todo);
                         }
-                    });
+                        adapter = new ListItemAdapter(MainActivity.this, toDoList);
+                        listItem.setAdapter(adapter);
+//                    dialog.dismiss();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(MainActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+        } catch (Exception e){
+            Log.e("MainActivity", "teste " + e.toString());
+            e.printStackTrace();
         }
     }
 

@@ -1,33 +1,82 @@
 package br.com.envolvedesenvolve.casalemcasa;
 
+import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.UUID;
+
+/**
+ * Created by Cristiano M. on 02/02/2020
+ * Modified by Cristiano M. on 04/02/2020
+ */
+
 public class LoginActivity extends AppCompatActivity {
 
-    Button login;
+    String code;
+
+    Button btnLogin;
+    EditText edtCode;
+    TextView txtClickHere, txtCode;
+    SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         changeStatusBarColor();
-        login = findViewById(R.id.btn_login);
 
-        login.setOnClickListener(new View.OnClickListener() {
+        edtCode = findViewById(R.id.edtCode);
+        btnLogin = findViewById(R.id.btnLogin);
+        txtClickHere = findViewById(R.id.txtClickHere);
+        txtCode = findViewById(R.id.txtCode);
+
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getBaseContext(), MainActivity.class));
+                if(!edtCode.getText().toString().isEmpty() || !edtCode.getText().toString().equals("")) {
+                    if(edtCode.getText().toString().length() >= 8) {
+                        String tmpCode = edtCode.getText().toString();
+                        connect(tmpCode);
+                    } else{
+                        Toast.makeText(getBaseContext(), "Código deve conter 8 caracteres !", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    Toast.makeText(getBaseContext(), "Preencha o campo !", Toast.LENGTH_LONG).show();
+                }
             }
         });
+
+        txtClickHere.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String id1 = UUID.randomUUID().toString();
+                String firstUUID = id1.split("-")[0];
+                Log.e("UUI", "UUI " + id1);
+                Log.e("UUI", "UUI last " + firstUUID);
+                connect(firstUUID);
+            }
+        });
+    }
+
+    public void connect(String code){
+        prefs = getSharedPreferences("login", Context.MODE_PRIVATE);
+        SharedPreferences.Editor ed = prefs.edit();
+        ed.putString("edtCode", code);
+        ed.commit();
+
+        startActivity(new Intent(getBaseContext(), MainActivity.class));
     }
 
     private void changeStatusBarColor() {
@@ -39,5 +88,14 @@ public class LoginActivity extends AppCompatActivity {
     public void onLoginClick(View View) {
         startActivity(new Intent(this, RegisterActivity.class));
         overridePendingTransition(R.anim.slide_in_right, R.anim.stay);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        prefs = getSharedPreferences("login", Context.MODE_PRIVATE);
+        code = prefs.getString("edtCode", "");
+        edtCode.setText(code);
+        txtCode.setText(code);
     }
 }

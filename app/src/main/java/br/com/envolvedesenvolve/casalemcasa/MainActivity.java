@@ -1,14 +1,21 @@
 package br.com.envolvedesenvolve.casalemcasa;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,28 +39,28 @@ import java.util.UUID;
 
 import br.com.envolvedesenvolve.casalemcasa.Adapter.ListItemAdapter;
 import br.com.envolvedesenvolve.casalemcasa.Model.ToDo;
+import br.com.envolvedesenvolve.casalemcasa.View.AboutFragment;
 
 /**
  * Created by Cristiano M. on 31/01/2020
+ * Modified by Cristiano M. on 04/02/2020
  */
 
 public class MainActivity extends AppCompatActivity {
 
-    String firstUUID;
-
-    List<ToDo> toDoList = new ArrayList<>();
-    FirebaseFirestore db;
-
-    RecyclerView listItem;
-    RecyclerView.LayoutManager layoutManager;
-
-    FloatingActionButton fab;
-
-    public MaterialEditText title, description;
+    String firstUUID, codeUUID;
     public boolean isUpdate = false;
     public String idUpdate = "";
+    private SharedPreferences prefs;
 
+    public MaterialEditText title, description;
+    FirebaseFirestore db;
+    RecyclerView listItem;
+    RecyclerView.LayoutManager layoutManager;
+    FloatingActionButton fab;
     ListItemAdapter adapter;
+
+    List<ToDo> toDoList = new ArrayList<>();
 //    AlertDialog dialog;
 
     @Override
@@ -61,11 +68,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         db = FirebaseFirestore.getInstance();
 //        dialog = new SpotsDialog(this);
         title = findViewById(R.id.title);
         description = findViewById(R.id.description);
         fab = findViewById(R.id.fab);
+
+        prefs = getSharedPreferences("login", Context.MODE_PRIVATE);
+        codeUUID = prefs.getString("edtCode", "teste");
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,15 +101,35 @@ public class MainActivity extends AppCompatActivity {
         listItem.setLayoutManager(layoutManager);
 
         loadData();
+    }
 
-        String id1 = UUID.randomUUID().toString();
-        firstUUID = id1.split("-")[0];
-        Log.e("UUI", "UUI " + id1);
-        Log.e("UUI", "UUI last " + firstUUID);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+//            DialogFragment aboutFragment = new AboutFragment();
+
+//            Bundle bundle = new Bundle();
+//            bundle.putString("EXTRA_PATHFILE_ERROR", pathFileError);
+//            aboutFragment.setArguments(bundle);
+//            aboutFragment.show(getFragmentManager(), "dialog");
+
+            startActivity(new Intent(getBaseContext(), AboutFragment.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+
     }
 
     private void updateData(String title, String description) {
-        db.collection(firstUUID).document(idUpdate)
+        db.collection(codeUUID).document(idUpdate)
                 .update("title", title, "description", description)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -103,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        db.collection(firstUUID).document(idUpdate)
+        db.collection(codeUUID).document(idUpdate)
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
@@ -119,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
         todo.put("title", title);
         todo.put("description", description);
 
-        db.collection(firstUUID).document(id)
+        db.collection(codeUUID).document(id)
                 .set(todo).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -134,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
             if (toDoList.size() > 0) {
                 toDoList.clear();
             }
-            db.collection(firstUUID)
+            db.collection(codeUUID)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -171,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void deleteItem(int index) {
-        db.collection(firstUUID)
+        db.collection(codeUUID)
                 .document(toDoList.get(index).getId())
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

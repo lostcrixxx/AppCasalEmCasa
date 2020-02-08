@@ -19,7 +19,7 @@ import java.util.UUID;
 
 /**
  * Created by Cristiano M. on 02/02/2020
- * Modified by Cristiano M. on 04/02/2020
+ * Modified by Cristiano M. on 07/02/2020
  */
 
 public class LoginActivity extends AppCompatActivity {
@@ -61,11 +61,16 @@ public class LoginActivity extends AppCompatActivity {
         txtClickHere.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String id1 = UUID.randomUUID().toString();
-                String firstUUID = id1.split("-")[0];
-                Log.e("UUI", "UUI " + id1);
-                Log.e("UUI", "UUI last " + firstUUID);
-                connect(firstUUID);
+                if(txtCode.getText().toString().isEmpty()){
+                    String id1 = UUID.randomUUID().toString();
+                    String firstUUID = id1.split("-")[0];
+                    Log.e("UUI", "UUI " + id1);
+                    Log.e("UUI", "UUI last " + firstUUID);
+                    connect(firstUUID);
+                } else {
+                    Toast.makeText(getBaseContext(), "Já existe uma lista criada !", Toast.LENGTH_LONG).show();
+                }
+
             }
         });
     }

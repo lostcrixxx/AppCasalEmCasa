@@ -76,8 +76,8 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemViewHolder>{
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onClick(View view, int position, boolean isLongClick) {
-                mainActivity.title.setText(todoList.get(position).getTitle());
-                mainActivity.description.setText(todoList.get(position).getDescription());
+                mainActivity.edtTitle.setText(todoList.get(position).getTitle());
+                mainActivity.edtDescription.setText(todoList.get(position).getDescription());
 
                 mainActivity.isUpdate = true;
                 mainActivity.idUpdate = todoList.get(position).getId();

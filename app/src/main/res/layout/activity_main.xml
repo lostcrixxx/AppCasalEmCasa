@@ -16,11 +16,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+
             app:popupTheme="@style/Widget.AppCompat.Light.PopupMenu.Overflow" />
-
-<!--    </com.google.android.material.appbar.AppBarLayout>-->
-
 
     <LinearLayout
         android:id="@+id/layout_info"
@@ -30,33 +27,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/title"
-            android:text="Título"
-            android:textSize="30sp"
-            android:inputType="text"
-            android:textColorHint="@android:color/white"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:met_baseColor="@android:color/white"
-            app:met_floatingLabel="highlight"
-            app:met_primaryColor="@android:color/white"
-            app:met_singleLineEllipsis="true"
-            />
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputPassword"
+            style="@style/parent"
+            android:layout_marginTop="20dp">
+            <EditText
+                android:id="@+id/title"
+                style="@style/modifiedEditText"
+                android:hint="Título da Tarefa"
+                android:textColorHint="@android:color/white"
+                android:maxLines="1"
+                android:inputType="text"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/description"
-            android:text="Descrição"
-            android:textSize="20sp"
-            android:inputType="textMultiLine"
-            android:textColorHint="@android:color/white"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:met_baseColor="@android:color/white"
-            app:met_floatingLabel="highlight"
-            app:met_primaryColor="@android:color/white"
-            app:met_singleLineEllipsis="true"
-            />
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/parent"
+            android:layout_marginTop="20dp">
+            <EditText
+                android:id="@+id/description"
+                style="@style/modifiedEditText"
+                android:hint="Descrição"
+                android:textColorHint="@android:color/white"
+                android:inputType="textMultiLine" />
+        </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>
 

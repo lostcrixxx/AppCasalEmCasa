@@ -6,17 +6,15 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,7 +28,6 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,22 +41,22 @@ import br.com.envolvedesenvolve.casalemcasa.View.AboutFragment;
 
 /**
  * Created by Cristiano M. on 31/01/2020
- * Modified by Cristiano M. on 04/02/2020
+ * Modified by Cristiano M. on 07/02/2020
  */
 
 public class MainActivity extends AppCompatActivity {
 
-    String firstUUID, codeUUID;
-    public boolean isUpdate = false;
+    private String firstUUID, codeUUID;
     public String idUpdate = "";
-    private SharedPreferences prefs;
+    public boolean isUpdate = false;
 
-    public MaterialEditText title, description;
-    FirebaseFirestore db;
-    RecyclerView listItem;
-    RecyclerView.LayoutManager layoutManager;
-    FloatingActionButton fab;
-    ListItemAdapter adapter;
+    private SharedPreferences prefs;
+    public EditText edtTitle, edtDescription;
+    private FirebaseFirestore db;
+    private RecyclerView listItem;
+    private RecyclerView.LayoutManager layoutManager;
+    private FloatingActionButton fab;
+    private ListItemAdapter adapter;
 
     List<ToDo> toDoList = new ArrayList<>();
 //    AlertDialog dialog;
@@ -79,8 +76,8 @@ public class MainActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
 //        dialog = new SpotsDialog(this);
-        title = findViewById(R.id.title);
-        description = findViewById(R.id.description);
+        edtTitle = findViewById(R.id.title);
+        edtDescription = findViewById(R.id.description);
         fab = findViewById(R.id.fab);
 
         prefs = getSharedPreferences("login", Context.MODE_PRIVATE);
@@ -89,11 +86,15 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isUpdate) {
-                    setData(title.getText().toString(), description.getText().toString());
+                if(!edtTitle.getText().toString().isEmpty() || !edtDescription.getText().toString().isEmpty()) {
+                    if (!isUpdate) {
+                        setData(edtTitle.getText().toString(), edtDescription.getText().toString());
+                    } else {
+                        updateData(edtTitle.getText().toString(), edtDescription.getText().toString());
+                        isUpdate = !isUpdate;
+                    }
                 } else {
-                    updateData(title.getText().toString(), description.getText().toString());
-                    isUpdate = !isUpdate;
+                    Toast.makeText(MainActivity.this, "Preencha os campos !", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -134,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateData(String title, String description) {
         db.collection(codeUUID).document(idUpdate)
-                .update("title", title, "description", description)
+                .update("edtTitle", title, "edtDescription", description)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -155,14 +156,16 @@ public class MainActivity extends AppCompatActivity {
         String id = UUID.randomUUID().toString();
         Map<String, Object> todo = new HashMap<>();
         todo.put("id", id);
-        todo.put("title", title);
-        todo.put("description", description);
+        todo.put("edtTitle", title);
+        todo.put("edtDescription", description);
 
         db.collection(codeUUID).document(id)
                 .set(todo).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 loadData();
+                edtTitle.setText("");
+                edtDescription.setText("");
             }
         });
     }
@@ -180,8 +183,8 @@ public class MainActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             for (DocumentSnapshot doc : task.getResult()) {
                                 ToDo todo = new ToDo(doc.getString("id"),
-                                        doc.getString("title"),
-                                        doc.getString("description"));
+                                        doc.getString("edtTitle"),
+                                        doc.getString("edtDescription"));
 
                                 toDoList.add(todo);
                             }

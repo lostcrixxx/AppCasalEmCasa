@@ -3,7 +3,6 @@ package br.com.envolvedesenvolve.casalemcasa.View;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +14,7 @@ import br.com.envolvedesenvolve.casalemcasa.R;
 
 public class AboutFragment extends DialogFragment {
 
-    String pathError;
-
-    static AboutFragment newInstance() {
+    public static AboutFragment newInstance(String some_title) {
         return new AboutFragment();
     }
 
@@ -25,8 +22,6 @@ public class AboutFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_about, container, false);
-
-        pathError = getArguments().getString("EXTRA_PATHFILE_ERROR");
 
         PackageManager manager = getContext().getPackageManager();
         PackageInfo info = null;
@@ -37,15 +32,12 @@ public class AboutFragment extends DialogFragment {
         }
 
         View tv = v.findViewById(R.id.textView);
-        ((TextView) tv).setText("2020 "
+        ((TextView) tv).setText("2020 @ Envolve & Desenvolve"
                 + "\n"
-                + "\nPackageName = " + info.packageName
+                + "\nApp = Casal em Casa"
                 + "\nVersão = " + info.versionName
                 + "\n"
-                + "\nCaminho da pasta = " + (Environment.getExternalStoragePublicDirectory("nomePasta") + "/nomeDoArquivo.csv")
-                + "\nPATH = " + pathError
         );
-
         return v;
     }
 }

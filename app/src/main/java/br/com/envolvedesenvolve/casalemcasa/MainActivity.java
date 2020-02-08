@@ -1,5 +1,6 @@
 package br.com.envolvedesenvolve.casalemcasa;
 
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,6 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,6 +41,7 @@ import java.util.UUID;
 import br.com.envolvedesenvolve.casalemcasa.Adapter.ListItemAdapter;
 import br.com.envolvedesenvolve.casalemcasa.Model.ToDo;
 import br.com.envolvedesenvolve.casalemcasa.View.AboutFragment;
+import br.com.envolvedesenvolve.casalemcasa.View.CodeFragment;
 
 /**
  * Created by Cristiano M. on 31/01/2020
@@ -118,15 +122,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+//        if (id == R.id.action_code) {
+//            FragmentManager fm = getSupportFragmentManager();
+//            CodeFragment editNameDialogFragment = CodeFragment.newInstance();
+//            editNameDialogFragment.show(fm, "fragment_edit_name");
+//            return true;
+//        }
         if (id == R.id.action_settings) {
-//            DialogFragment aboutFragment = new AboutFragment();
-
-//            Bundle bundle = new Bundle();
-//            bundle.putString("EXTRA_PATHFILE_ERROR", pathFileError);
-//            aboutFragment.setArguments(bundle);
-//            aboutFragment.show(getFragmentManager(), "dialog");
-
-            startActivity(new Intent(getBaseContext(), AboutFragment.class));
+            FragmentManager fm = getSupportFragmentManager();
+            AboutFragment editNameDialogFragment = AboutFragment.newInstance("Some Title");
+            editNameDialogFragment.show(fm, "fragment_edit_name");
             return true;
         }
         return super.onOptionsItemSelected(item);

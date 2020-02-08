@@ -122,17 +122,29 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-//        if (id == R.id.action_code) {
+        switch(id) {
+//            case R.id.action_code:
 //            FragmentManager fm = getSupportFragmentManager();
 //            CodeFragment editNameDialogFragment = CodeFragment.newInstance();
 //            editNameDialogFragment.show(fm, "fragment_edit_name");
-//            return true;
-//        }
-        if (id == R.id.action_settings) {
-            FragmentManager fm = getSupportFragmentManager();
-            AboutFragment editNameDialogFragment = AboutFragment.newInstance("Some Title");
-            editNameDialogFragment.show(fm, "fragment_edit_name");
-            return true;
+//                break;
+            case R.id.action_logoff:
+                onBackPressed();
+                break;
+            case R.id.action_about:
+                FragmentManager fm = getSupportFragmentManager();
+                AboutFragment editNameDialogFragment = AboutFragment.newInstance("Some Title");
+                editNameDialogFragment.show(fm, "fragment_edit_name");
+            break;
+//            case R.id.action_settings:
+//                Log.d("MainActivity", "configurações");
+//                Intent iConfig = new Intent(this, ConfigActivity.class);
+//                startActivity(iConfig);
+//                break;
+            case R.id.action_close:
+//                Log.d("MainActivity", "sair");
+                finishAffinity();
+                break;
         }
         return super.onOptionsItemSelected(item);
 

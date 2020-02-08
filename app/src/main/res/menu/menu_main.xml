@@ -7,8 +7,23 @@
 <!--        android:orderInCategory="100"-->
 <!--        app:showAsAction="never" />-->
 
-    <item android:id="@+id/action_settings"
+    <item android:id="@+id/action_logoff"
+        android:title="Desconectar Lista"
+        android:orderInCategory="150"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/action_about"
         android:title="Sobre"
         android:orderInCategory="200"
+        app:showAsAction="never" />
+
+<!--    <item android:id="@+id/action_settings"-->
+<!--        android:title="Configurações"-->
+<!--        android:orderInCategory="300"-->
+<!--        app:showAsAction="never" />-->
+
+    <item android:id="@+id/action_close"
+        android:title="Sair"
+        android:orderInCategory="400"
         app:showAsAction="never" />
 </menu>

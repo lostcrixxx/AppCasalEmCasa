@@ -125,6 +125,10 @@ public class MainActivity extends AppCompatActivity {
 //            editNameDialogFragment.show(fm, "fragment_edit_name");
 //                break;
             case R.id.action_logoff:
+                prefs = getSharedPreferences("login", Context.MODE_PRIVATE);
+                SharedPreferences.Editor ed = prefs.edit();
+                ed.putBoolean("statusPrefs", false);
+                ed.commit();
                 onBackPressed();
                 break;
             case R.id.action_about:

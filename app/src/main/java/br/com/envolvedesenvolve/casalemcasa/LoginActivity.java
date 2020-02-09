@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.Checkable;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -76,9 +78,16 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void connect(String code){
+        Checkable chkLogin = findViewById(R.id.chkLogin);
+        boolean statusLogin = false;
+        if(chkLogin.isChecked()){
+            statusLogin = true;
+        }
+
         prefs = getSharedPreferences("login", Context.MODE_PRIVATE);
         SharedPreferences.Editor ed = prefs.edit();
         ed.putString("codePrefs", code);
+        ed.putBoolean("statusPrefs", statusLogin);
         ed.commit();
 
         startActivity(new Intent(getBaseContext(), MainActivity.class));

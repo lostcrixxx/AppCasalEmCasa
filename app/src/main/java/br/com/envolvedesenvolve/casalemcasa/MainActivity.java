@@ -1,6 +1,7 @@
 package br.com.envolvedesenvolve.casalemcasa;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,6 +39,7 @@ import java.util.UUID;
 import br.com.envolvedesenvolve.casalemcasa.Adapter.ListItemAdapter;
 import br.com.envolvedesenvolve.casalemcasa.Model.ToDo;
 import br.com.envolvedesenvolve.casalemcasa.View.AboutFragment;
+import br.com.envolvedesenvolve.casalemcasa.View.NewTaskActivity;
 
 /**
  * Created by Cristiano M. on 31/01/2020
@@ -46,12 +48,13 @@ import br.com.envolvedesenvolve.casalemcasa.View.AboutFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String firstUUID, codeUUID;
+    private String codeUUID;
     public String idUpdate = "";
     public boolean isUpdate = false;
 
-    private SharedPreferences prefs;
     public EditText edtTitle, edtDescription;
+
+    private SharedPreferences prefs;
     private FirebaseFirestore db;
     private RecyclerView listItem;
     private RecyclerView.LayoutManager layoutManager;
@@ -66,18 +69,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-
-//        ActionBar actionBar = getSupportActionBar();
-//        if (actionBar != null) {
-//            actionBar.setDisplayHomeAsUpEnabled(true);
-//        }
-
         db = FirebaseFirestore.getInstance();
 //        dialog = new SpotsDialog(this);
-        edtTitle = findViewById(R.id.title);
-        edtDescription = findViewById(R.id.description);
         fab = findViewById(R.id.fab);
 
         prefs = getSharedPreferences("login", Context.MODE_PRIVATE);
@@ -86,16 +79,18 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!edtTitle.getText().toString().isEmpty() || !edtDescription.getText().toString().isEmpty()) {
-                    if (!isUpdate) {
-                        setData(edtTitle.getText().toString(), edtDescription.getText().toString());
-                    } else {
-                        updateData(edtTitle.getText().toString(), edtDescription.getText().toString());
-                        isUpdate = !isUpdate;
-                    }
-                } else {
-                    Toast.makeText(MainActivity.this, "Preencha os campos !", Toast.LENGTH_SHORT).show();
-                }
+                startActivity(new Intent(MainActivity.this, NewTaskActivity.class));
+
+//                if(!edtTitle.getText().toString().isEmpty() || !edtDescription.getText().toString().isEmpty()) {
+//                    if (!isUpdate) {
+//                        setData(edtTitle.getText().toString(), edtDescription.getText().toString());
+//                    } else {
+//                        updateData(edtTitle.getText().toString(), edtDescription.getText().toString());
+//                        isUpdate = !isUpdate;
+//                    }
+//                } else {
+//                    Toast.makeText(MainActivity.this, "Preencha os campos !", Toast.LENGTH_SHORT).show();
+//                }
             }
         });
 
@@ -118,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch(id) {
+        switch (id) {
 //            case R.id.action_code:
 //            FragmentManager fm = getSupportFragmentManager();
 //            CodeFragment editNameDialogFragment = CodeFragment.newInstance();
@@ -135,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
                 FragmentManager fm = getSupportFragmentManager();
                 AboutFragment editNameDialogFragment = AboutFragment.newInstance("Some Title");
                 editNameDialogFragment.show(fm, "fragment_edit_name");
-            break;
+                break;
 //            case R.id.action_settings:
 //                Log.d("MainActivity", "configurações");
 //                Intent iConfig = new Intent(this, ConfigActivity.class);
@@ -167,24 +162,6 @@ public class MainActivity extends AppCompatActivity {
                         loadData();
                     }
                 });
-    }
-
-    private void setData(String title, String description) {
-        String id = UUID.randomUUID().toString();
-        Map<String, Object> todo = new HashMap<>();
-        todo.put("id", id);
-        todo.put("title", title);
-        todo.put("description", description);
-
-        db.collection(codeUUID).document(id)
-                .set(todo).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                loadData();
-                edtTitle.setText("");
-                edtDescription.setText("");
-            }
-        });
     }
 
     private void loadData() {

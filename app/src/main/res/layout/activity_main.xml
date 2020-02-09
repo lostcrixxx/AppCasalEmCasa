@@ -6,54 +6,26 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar_layout"
+    <LinearLayout
+        android:id="@+id/layout_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme">
+        android:background="@color/colorPrimaryDark"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize" />
-
-        <LinearLayout
-            android:id="@+id/layout_info"
+        <TextView
+            android:id="@+id/titlepage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="18dp"
+            android:text="Minha Lista"
+            android:textAlignment="center"
+            android:textColor="#FFF"
+            android:textSize="26sp" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputPassword"
-                style="@style/parent"
-                android:layout_marginTop="20dp">
-
-                <EditText
-                    android:id="@+id/title"
-                    style="@style/modifiedEditText"
-                    android:hint="Título da Tarefa"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:textColorHint="@android:color/white" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/parent"
-                android:layout_marginTop="20dp">
-
-                <EditText
-                    android:id="@+id/description"
-                    style="@style/modifiedEditText"
-                    android:hint="Descrição"
-                    android:inputType="textMultiLine"
-                    android:textColorHint="@android:color/white" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-        </LinearLayout>
-
-    </com.google.android.material.appbar.AppBarLayout>
+    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -62,16 +34,17 @@
         android:layout_marginRight="10dp"
         android:elevation="6dp"
         android:src="@drawable/ic_add"
+        app:backgroundTint="@color/register_bk_color"
         app:fabSize="normal"
-        app:layout_anchor="@id/app_bar_layout"
+        app:layout_anchor="@id/layout_info"
         app:layout_anchorGravity="bottom|right"
         app:pressedTranslationZ="12dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listTodo"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="30dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="135dp"
+        app:layout_anchor="@id/fab" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

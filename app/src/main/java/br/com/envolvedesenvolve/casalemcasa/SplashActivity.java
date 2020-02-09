@@ -15,6 +15,7 @@ import android.os.Handler;
 
 public class SplashActivity extends AppCompatActivity {
 
+    String code;
     boolean statusLogin;
     Handler handler;
     SharedPreferences prefs;
@@ -25,9 +26,10 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         prefs = getSharedPreferences("login", Context.MODE_PRIVATE);
+        code = prefs.getString("codePrefs", "");
         statusLogin = prefs.getBoolean("statusPrefs", false);
 
-        if(statusLogin) {
+        if(!code.equals("") && statusLogin) {
             startActivity(new Intent(SplashActivity.this, MainActivity.class));
         } else {
             handler = new Handler();

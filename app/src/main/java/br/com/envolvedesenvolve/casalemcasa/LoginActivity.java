@@ -19,7 +19,7 @@ import java.util.UUID;
 
 /**
  * Created by Cristiano M. on 02/02/2020
- * Modified by Cristiano M. on 07/02/2020
+ * Modified by Cristiano M. on 09/02/2020
  */
 
 public class LoginActivity extends AppCompatActivity {
@@ -78,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
     public void connect(String code){
         prefs = getSharedPreferences("login", Context.MODE_PRIVATE);
         SharedPreferences.Editor ed = prefs.edit();
-        ed.putString("edtCode", code);
+        ed.putString("codePrefs", code);
         ed.commit();
 
         startActivity(new Intent(getBaseContext(), MainActivity.class));
@@ -99,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         prefs = getSharedPreferences("login", Context.MODE_PRIVATE);
-        code = prefs.getString("edtCode", "");
+        code = prefs.getString("codePrefs", "");
         edtCode.setText(code);
         txtCode.setText(code);
     }

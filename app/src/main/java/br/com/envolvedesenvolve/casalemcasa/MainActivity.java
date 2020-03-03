@@ -40,10 +40,11 @@ import br.com.envolvedesenvolve.casalemcasa.Adapter.ListItemAdapter;
 import br.com.envolvedesenvolve.casalemcasa.Model.ToDo;
 import br.com.envolvedesenvolve.casalemcasa.View.AboutFragment;
 import br.com.envolvedesenvolve.casalemcasa.View.NewTaskActivity;
+import me.leolin.shortcutbadger.ShortcutBadger;
 
 /**
  * Created by Cristiano M. on 31/01/2020
- * Modified by Cristiano M. on 09/02/2020
+ * Modified by Cristiano M. on 02/03/2020
  */
 
 public class MainActivity extends AppCompatActivity {
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private String codeUUID;
     public String idUpdate = "";
     public boolean isUpdate = false;
+    private int badgeCount;
 
     public EditText edtTitle, edtDescription;
 
@@ -166,9 +168,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadData() {
         try {
+//            badgeCount = 0;
 //        dialog.show();
             if (toDoList.size() > 0) {
                 toDoList.clear();
+                badgeCount = 0;
             }
             db.collection(codeUUID)
                     .get()
@@ -181,7 +185,14 @@ public class MainActivity extends AppCompatActivity {
                                         doc.getString("description"));
 
                                 toDoList.add(todo);
+                                badgeCount += 1;
+                                Log.e("MainActivity", "badge antes" + badgeCount);
                             }
+
+                            // Exibe a quantidade de tarefas no ícone
+                            ShortcutBadger.applyCount(getBaseContext(), badgeCount);
+                            Log.e("MainActivity", "badge depois " + badgeCount);
+
                             adapter = new ListItemAdapter(MainActivity.this, toDoList);
                             listItem.setAdapter(adapter);
 //                    dialog.dismiss();
@@ -189,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(MainActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "ERRO " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {

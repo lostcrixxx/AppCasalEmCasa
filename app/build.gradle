@@ -8,8 +8,8 @@ android {
         applicationId "br.com.envolvedesenvolve.casalemcasa"
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode 3
-        versionName '0.0.3'
+        versionCode 4
+        versionName '0.0.4'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -36,6 +36,7 @@ dependencies {
     implementation 'com.github.d-max:spots-dialog:1.1@aar'
     implementation 'com.rengwuxian.materialedittext:library:2.1.4'
 
-//    implementation 'br.com.simplepass:loading-button-android:2.2.0'
     implementation 'br.com.simplepass:loading-button-android:2.2.0'
+
+    implementation "me.leolin:ShortcutBadger:1.1.22@aar"
 }

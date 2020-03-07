@@ -1,5 +1,6 @@
 package br.com.envolvedesenvolve.casalemcasa.Adapter;
 
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,11 +77,15 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemViewHolder>{
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onClick(View view, int position, boolean isLongClick) {
-                mainActivity.edtTitle.setText(todoList.get(position).getTitle());
-                mainActivity.edtDescription.setText(todoList.get(position).getDescription());
+                try {
+                    mainActivity.edtTitle.setText(todoList.get(position).getTitle());
+                    mainActivity.edtDescription.setText(todoList.get(position).getDescription());
 
-                mainActivity.isUpdate = true;
-                mainActivity.idUpdate = todoList.get(position).getId();
+                    mainActivity.isUpdate = true;
+                    mainActivity.idUpdate = todoList.get(position).getId();
+                } catch(Exception e){
+                    Log.e("ListImteAdapter", "ERRO onClick");
+                }
             }
         });
     }

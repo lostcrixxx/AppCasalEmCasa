@@ -40,6 +40,8 @@ import br.com.envolvedesenvolve.casalemcasa.Adapter.ListItemAdapter;
 import br.com.envolvedesenvolve.casalemcasa.Model.ToDo;
 import br.com.envolvedesenvolve.casalemcasa.View.AboutFragment;
 import br.com.envolvedesenvolve.casalemcasa.View.NewTaskActivity;
+import io.sentry.Sentry;
+import io.sentry.android.AndroidSentryClientFactory;
 import me.leolin.shortcutbadger.ShortcutBadger;
 
 /**
@@ -70,6 +72,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Sentry.init("https://b97dbc2399f14114aa75c78b68a000eb@sentry.io/3966953", new AndroidSentryClientFactory(this));
+
+        // OneSignal Initialization
+//        OneSignal.startInit(this)
+//                .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
+//                .unsubscribeWhenNotificationsAreDisabled(true)
+//                .init();
 
         db = FirebaseFirestore.getInstance();
 //        dialog = new SpotsDialog(this);
@@ -103,6 +113,13 @@ public class MainActivity extends AppCompatActivity {
         listItem.setLayoutManager(layoutManager);
 
         loadData();
+    }
+
+    /**
+     * An example method that throws an exception.
+     */
+    void unsafeMethod() {
+        throw new UnsupportedOperationException("You shouldn't call this!");
     }
 
     @Override

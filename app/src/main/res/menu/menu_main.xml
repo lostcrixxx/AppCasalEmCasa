@@ -12,6 +12,11 @@
         android:orderInCategory="150"
         app:showAsAction="never" />
 
+    <item android:id="@+id/action_qrcode"
+        android:title="Código da Lista"
+        android:orderInCategory="175"
+        app:showAsAction="never" />
+
     <item android:id="@+id/action_about"
         android:title="Sobre"
         android:orderInCategory="200"

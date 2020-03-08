@@ -8,8 +8,8 @@ android {
         applicationId "br.com.envolvedesenvolve.casalemcasa"
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode 6
-        versionName '0.0.6'
+        versionCode 7
+        versionName '0.0.7'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -48,5 +48,9 @@ dependencies {
 
     // Push notifications
 //    implementation 'com.onesignal:OneSignal:3.12.3'
+
+    // QrCode
+    implementation 'com.google.zxing:core:3.3.0'
+    implementation 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
 
 }

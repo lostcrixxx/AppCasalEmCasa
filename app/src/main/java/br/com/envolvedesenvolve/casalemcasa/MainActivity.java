@@ -3,18 +3,21 @@ package br.com.envolvedesenvolve.casalemcasa;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,27 +32,30 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 import br.com.envolvedesenvolve.casalemcasa.Adapter.ListItemAdapter;
 import br.com.envolvedesenvolve.casalemcasa.Model.ToDo;
 import br.com.envolvedesenvolve.casalemcasa.View.AboutFragment;
 import br.com.envolvedesenvolve.casalemcasa.View.NewTaskActivity;
+import br.com.envolvedesenvolve.casalemcasa.View.QrCodeFragment;
 import io.sentry.Sentry;
 import io.sentry.android.AndroidSentryClientFactory;
 import me.leolin.shortcutbadger.ShortcutBadger;
 
 /**
  * Created by Cristiano M. on 31/01/2020
- * Modified by Cristiano M. on 02/03/2020
+ * Modified by Cristiano M. on 07/03/2020
  */
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     private String codeUUID;
     public String idUpdate = "";
@@ -65,7 +71,9 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton fab;
     private ListItemAdapter adapter;
 
-    List<ToDo> toDoList = new ArrayList<>();
+    private ImageView ivQRCode;
+
+    private List<ToDo> toDoList = new ArrayList<>();
 //    AlertDialog dialog;
 
     @Override
@@ -103,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
 //                } else {
 //                    Toast.makeText(MainActivity.this, "Preencha os campos !", Toast.LENGTH_SHORT).show();
 //                }
+
             }
         });
 
@@ -113,13 +122,11 @@ public class MainActivity extends AppCompatActivity {
         listItem.setLayoutManager(layoutManager);
 
         loadData();
+        iniciliarComponentes();
     }
 
-    /**
-     * An example method that throws an exception.
-     */
-    void unsafeMethod() {
-        throw new UnsupportedOperationException("You shouldn't call this!");
+    private void iniciliarComponentes() {
+        ivQRCode = (ImageView) findViewById(R.id.ivQRCode);
     }
 
     @Override
@@ -129,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    FragmentManager fm;
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -145,10 +153,15 @@ public class MainActivity extends AppCompatActivity {
                 ed.commit();
                 onBackPressed();
                 break;
-            case R.id.action_about:
-                FragmentManager fm = getSupportFragmentManager();
-                AboutFragment editNameDialogFragment = AboutFragment.newInstance("Some Title");
+            case R.id.action_qrcode:
+                fm = getSupportFragmentManager();
+                QrCodeFragment editNameDialogFragment = QrCodeFragment.newInstance();
                 editNameDialogFragment.show(fm, "fragment_edit_name");
+                break;
+            case R.id.action_about:
+                fm = getSupportFragmentManager();
+                AboutFragment aboutFragment = AboutFragment.newInstance("Some Title");
+                aboutFragment.show(fm, "fragment_edit_name");
                 break;
 //            case R.id.action_settings:
 //                Log.d("MainActivity", "configurações");
